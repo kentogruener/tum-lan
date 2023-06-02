@@ -1,7 +1,8 @@
 'use client';
 
 import { Title } from '@/components/text';
-import { useAppContext } from '@/context/AppContext';
+import { PIZZA_SIZE, PIZZA_TYPE, PizzaSizes } from '@/context/AppContext';
+import { PizzaTypes, useAppContext } from '@/context/AppContext';
 import styled from 'styled-components';
 
 function HeaderRow() {
@@ -27,7 +28,26 @@ function HeaderRow() {
 }
 
 export default function PizzaPage() {
-  const { pizza } = useAppContext();
+  const { pizza, getPizzaAmount } = useAppContext();
+
+  function PizzaCell(type: PIZZA_TYPE, size: PIZZA_SIZE) {
+    return (
+      <Cell>
+        <TableText>{getPizzaAmount(type, size)}</TableText>
+      </Cell>
+    );
+  }
+
+  function PizzaRow(type: PIZZA_TYPE) {
+    return (
+      <Row>
+        <Cell>
+          <TableText>{type}</TableText>
+        </Cell>
+        {PizzaSizes.map((size) => PizzaCell(type, size))}
+      </Row>
+    );
+  }
 
   return (
     <ViewPort>
@@ -36,25 +56,7 @@ export default function PizzaPage() {
       </Header>
       <Content>
         <HeaderRow />
-        {pizza.map((pizza) => (
-          <Row key={pizza.name}>
-            <Cell>
-              <TableText>{pizza.name}</TableText>
-            </Cell>
-            <Cell>
-              <TableText>{pizza.normal}</TableText>
-            </Cell>
-            <Cell>
-              <TableText>{pizza.large}</TableText>
-            </Cell>
-            <Cell>
-              <TableText>{pizza.family}</TableText>
-            </Cell>
-            <Cell>
-              <TableText>{pizza.prima}</TableText>
-            </Cell>
-          </Row>
-        ))}
+        {PizzaTypes.map((type) => PizzaRow(type))}
       </Content>
       <Footer></Footer>
     </ViewPort>
@@ -119,4 +121,5 @@ const TableText = styled.p`
   font-size: 2rem;
   font-weight: 700;
   color: #fff;
+  text-align: center;
 `;
