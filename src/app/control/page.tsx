@@ -1,11 +1,12 @@
 'use client';
 
 import { Subtitle, Title } from '@/components/Text';
+import { sceneComponents } from '@/components/scenes';
 import { PizzaSizes } from '@/context/AppContext';
 import { PizzaTypes, useAppContext } from '@/context/AppContext';
 import styled from 'styled-components';
 
-function HeaderRow() {
+function PizzaHeaderRow() {
   return (
     <Row>
       <NameCell>
@@ -27,17 +28,118 @@ function HeaderRow() {
   );
 }
 
+function StreamHeaderRow() {
+  return (
+    <Row>
+      <NameCell>
+        <HeaderText>Scene</HeaderText>
+      </NameCell>
+      <Cell>
+        <HeaderText>Rotation</HeaderText>
+      </Cell>
+      <Cell>
+        <HeaderText></HeaderText>
+      </Cell>
+      <Cell>
+        <HeaderText></HeaderText>
+      </Cell>
+      <Cell>
+        <HeaderText></HeaderText>
+      </Cell>
+    </Row>
+  );
+}
+
 export default function ControlPage() {
-  const { getPizzaAmount, increasePizzaAmount, decreasePizzaAmount } =
-    useAppContext();
+  const {
+    scenes,
+    getPizzaAmount,
+    increasePizzaAmount,
+    decreasePizzaAmount,
+    setSceneRoationActive,
+    setSceneDuration,
+    getSceneMetaShow,
+    setSceneMetaShow,
+    setSceneKey,
+  } = useAppContext();
 
   return (
     <ViewPort>
       <Header>
         <Title>Control Page</Title>
       </Header>
-      <Content>
-        <HeaderRow />
+      <Stream>
+        <Subtitle>Stream</Subtitle>
+        <hr />
+        <Row>
+          <NameCell>
+            <TableText>Reset</TableText>
+          </NameCell>
+          <Cell>
+            <button onClick={() => localStorage.clear()}>Reset</button>
+          </Cell>
+        </Row>
+        <Row>
+          <NameCell>
+            <TableText>Current Scene</TableText>
+          </NameCell>
+          <Cell>{scenes.currentSceneKey}</Cell>
+        </Row>
+        <Row>
+          <NameCell>
+            <TableText>Rotation</TableText>
+          </NameCell>
+          <Cell>
+            <input
+              type="checkbox"
+              checked={scenes.rotationActive}
+              onChange={() => setSceneRoationActive(!scenes.rotationActive)}
+            />
+          </Cell>
+        </Row>
+        <Row>
+          <NameCell>
+            <TableText>Duration</TableText>
+          </NameCell>
+          <Cell>
+            <input
+              type="number"
+              value={scenes.duration}
+              onChange={(event) =>
+                setSceneDuration(Number.parseInt(event.target.value) || 1000)
+              }
+            />
+          </Cell>
+        </Row>
+        <hr />
+        <StreamHeaderRow />
+        <hr />
+        {Object.keys(sceneComponents).map((sceneName) => {
+          const show = getSceneMetaShow(sceneName);
+
+          return (
+            <Row key={sceneName}>
+              <NameCell>
+                <TableText>{sceneName}</TableText>
+              </NameCell>
+              <Cell>
+                <input
+                  type="checkbox"
+                  checked={show}
+                  onChange={() => setSceneMetaShow(sceneName, !show)}
+                />
+              </Cell>
+              <Cell>
+                <button onClick={() => setSceneKey(sceneName)}>Select</button>
+              </Cell>
+            </Row>
+          );
+        })}
+      </Stream>
+      <Pizza>
+        <Subtitle>Pizza</Subtitle>
+        <hr />
+        <PizzaHeaderRow />
         <hr />
         {PizzaTypes.map((type) => {
           return (
@@ -69,8 +171,7 @@ export default function ControlPage() {
             </Row>
           );
         })}
-      </Content>
-      <Footer></Footer>
+      </Pizza>
     </ViewPort>
   );
 }
@@ -78,34 +179,38 @@ export default function ControlPage() {
 const ViewPort = styled.div`
   position: absolute;
 
-  height: 100vh;
-  width: 100vw;
+  height: auto;
+  width: 100%;
 
   display: grid;
   grid-template-columns: 1fr 70% 1fr;
-  grid-template-rows: 30% 70% 1fr;
+  grid-template-rows: 200px repeat(2, max-content);
   grid-template-areas:
     'header header header'
-    'left content right'
-    'footer footer footer';
+    'left stream right'
+    'left pizza right';
 
   background: rgba(0, 0, 0, 0.8);
 `;
 
+const ContentContainer = styled.div`
+  padding-bottom: 64px;
+`;
+
 const Header = styled.div`
-  grid-area: header;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  grid-area: header;
 `;
 
-const Content = styled.div`
-  grid-area: content;
+const Pizza = styled(ContentContainer)`
+  grid-area: pizza;
 `;
 
-const Footer = styled.div`
-  grid-area: footer;
+const Stream = styled(ContentContainer)`
+  grid-area: stream;
 `;
 
 const Row = styled.div`

@@ -1,12 +1,11 @@
 import Image from 'next/image';
-import { PropsWithChildren } from 'react';
 import styled from 'styled-components';
 import BackgroundImageSrc from '../../public/render-background.png';
 import Island from '../../public/Insel-klein.png';
 import WolkeLinksImage from '../../public/Wolke-links-klein.png';
 import WolkeRechtsImage from '../../public/Wolke-rechts-klein.png';
 
-export default function Background({ children }: PropsWithChildren) {
+export default function Background() {
   return (
     <>
       <BackgroundImage src={BackgroundImageSrc} alt={'background'} />
@@ -15,24 +14,9 @@ export default function Background({ children }: PropsWithChildren) {
         <WolkeLinks src={WolkeLinksImage} alt={'wolke links'} />
         <WolkeRechts src={WolkeRechtsImage} alt={'wolke rechts'} />
       </AnimationContainer>
-      <Page>{children}</Page>
     </>
   );
 }
-
-const Page = styled.div`
-  position: absolute;
-
-  height: 100vh;
-  width: 100vw;
-
-  display: flex;
-  flex-direction: column;
-  justify-content: end;
-  align-items: baseline;
-
-  padding: 32px;
-`;
 
 const BackgroundImage = styled(Image)`
   height: 100vh;
