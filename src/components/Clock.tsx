@@ -21,8 +21,8 @@ export default function Clock() {
 
 const ClockContainer = styled.div`
   position: fixed;
-  right: 32px;
-  bottom: 32px;
+  right: 16px;
+  bottom: 16px;
 
   border: 4px solid #fff;
   border-radius: 8px;

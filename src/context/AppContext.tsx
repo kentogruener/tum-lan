@@ -8,11 +8,26 @@ import {
   useState,
 } from 'react';
 
-export type PIZZA_TYPE = "Margerita" | "Salami" | "Regina" | "Prosciutto" | "Tonno" | "Quattro Formaggi" | "Vegan";
-export type PIZZA_SIZE = "normal" | "large" | "family" | "prima";
+export type PIZZA_TYPE =
+  | 'Margerita'
+  | 'Salami'
+  | 'Regina'
+  | 'Prosciutto'
+  | 'Tonno'
+  | 'Quattro Formaggi'
+  | 'Vegan';
+export type PIZZA_SIZE = 'normal' | 'large' | 'family' | 'prima';
 
-export const PizzaTypes: PIZZA_TYPE[] = ["Margerita", "Salami", "Regina", "Prosciutto", "Tonno", "Quattro Formaggi", "Vegan"];
-export const PizzaSizes: PIZZA_SIZE[] = ["normal", "large", "family", "prima"];
+export const PizzaTypes: PIZZA_TYPE[] = [
+  'Margerita',
+  'Salami',
+  'Regina',
+  'Prosciutto',
+  'Tonno',
+  'Quattro Formaggi',
+  'Vegan',
+];
+export const PizzaSizes: PIZZA_SIZE[] = ['normal', 'large', 'family', 'prima'];
 
 type PizzaData = {
   [key in PIZZA_SIZE]: number;
@@ -24,22 +39,22 @@ type PizzaState = {
 
 const createEmptyPizzaData: () => PizzaData = () => {
   return {
-    "normal": 0,
-    "large": 0,
-    "family": 0,
-    "prima": 0,
+    normal: 0,
+    large: 0,
+    family: 0,
+    prima: 0,
   };
 };
 
 const createEmptyPizzaState: () => PizzaState = () => {
   return {
-    "Margerita": createEmptyPizzaData(),
-    "Salami": createEmptyPizzaData(),
-    "Regina": createEmptyPizzaData(),
-    "Prosciutto": createEmptyPizzaData(),
-    "Tonno": createEmptyPizzaData(),
-    "Quattro Formaggi": createEmptyPizzaData(),
-    "Vegan": createEmptyPizzaData(),
+    Margerita: createEmptyPizzaData(),
+    Salami: createEmptyPizzaData(),
+    Regina: createEmptyPizzaData(),
+    Prosciutto: createEmptyPizzaData(),
+    Tonno: createEmptyPizzaData(),
+    'Quattro Formaggi': createEmptyPizzaData(),
+    Vegan: createEmptyPizzaData(),
   };
 };
 
@@ -70,8 +85,6 @@ export function AppContextProvider({ children }: PropsWithChildren) {
 
   const setPizzaWithLocalStorage = (pizza: PizzaState) => {
     setPizza(pizza);
-    console.log(pizza);
-    console.log(JSON.stringify(pizza));
     localStorage.setItem('pizza', JSON.stringify(pizza));
   };
 
@@ -80,7 +93,11 @@ export function AppContextProvider({ children }: PropsWithChildren) {
     return data != null ? data[size] ?? 0 : 0;
   };
 
-  const setPizzaAmount = (name: PIZZA_TYPE, size: PIZZA_SIZE, amount: number) => {
+  const setPizzaAmount = (
+    name: PIZZA_TYPE,
+    size: PIZZA_SIZE,
+    amount: number
+  ) => {
     const state = structuredClone(pizza);
     let data = state[name];
 
@@ -126,14 +143,16 @@ export function AppContextProvider({ children }: PropsWithChildren) {
   }, []);
 
   return (
-    <AppContext.Provider value={{
-      pizza,
-      getPizzaAmount,
-      setPizzaAmount,
-      setPizzaWithLocalStorage,
-      increasePizzaAmount,
-      decreasePizzaAmount,
-    }}>
+    <AppContext.Provider
+      value={{
+        pizza,
+        getPizzaAmount,
+        setPizzaAmount,
+        setPizzaWithLocalStorage,
+        increasePizzaAmount,
+        decreasePizzaAmount,
+      }}
+    >
       {children}
     </AppContext.Provider>
   );
